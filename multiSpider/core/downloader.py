@@ -1,7 +1,7 @@
 import requests
 
 
-class SVzDownloader:
+class Downloader:
     def __init__(self,headers=None):
         baseheaders={
             'Connection':'keep-alive',
@@ -23,5 +23,5 @@ class SVzDownloader:
         return content.content.decode()
 
 if __name__ == '__main__':
-    d = SVzDownloader()
+    d = Downloader()
     d.download('https://so.gushiwen.org/authors/')

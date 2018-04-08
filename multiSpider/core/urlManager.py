@@ -1,10 +1,10 @@
 from urllib.parse import urljoin
 
-class SVzUrlManager:
+class UrlManager:
     def __init__(self, rootUrl, urls, max_depth):
         self.max_depth = max_depth
         self.newUrls = dict(urls)
-        self.oldUrls = set()
+        self.oldUrls = list()
         self.rootUrl = rootUrl
 
     def has_url(self):
@@ -12,7 +12,7 @@ class SVzUrlManager:
 
     def get_url(self):
         url, depth = self.newUrls.popitem()
-        self.oldUrls.add(url)
+        self.oldUrls.append(url)
         return urljoin(self.rootUrl, url), depth
 
     def add_url(self, url, depth):
