@@ -1,37 +1,33 @@
-from multiprocessing.managers import BaseManager
-
 from multiprocessing import Process
-from time import sleep
 
-from multiSpider.core.config import *
 from multiSpider.core.downloader import Downloader
 from multiSpider.core.parser import Parser
+from multiSpider.core.saver import Saver
+from multiSpider.core.urlManager import UrlManager
+
 
 
 class Worker(Process):
-    def __init__(self, name, *, downloader=Downloader, parser=Parser):
+    def __init__(self, name, rootUrl, urls, *, urlManager=UrlManager, downloader=Downloader, parser=Parser, saver=Saver):
         super().__init__()
         self.name=name
-        self.manager=BaseManager(**managerConfig)
+        self.urlManager=urlManager(rootUrl,urls)
         self.downloader = downloader()
         self.parser = parser()
-
-    def initManager(self):
-        for action in managerAction:
-            print(action)
-            self.manager.register(action['typeid'])
-        self.manager.connect()
-
-    # def initQueue(self):
-    #     self.newUrls = self.manager.getUrl()
-    #     self.oldUrls = self.manager.getOldUrls()
+        self.saver = saver()
 
     def run(self):
-        self.initManager()
-        # self.initQueue()
-        while True:
-            u = self.manager.getUrl()
-            print(u)
-            u['c']=1
-            print(u['a'])
-            sleep(1)
+        self.craw()
+
+    def craw(self):
+        while self.urlManager.has_url() != 'end':
+            url = self.urlManager.get_url()
+            print(f'{self.name} crawing {url}')
+            try:
+                content = self.downloader.download(url)
+                urls, datas = self.parser.parse(content)
+                self.urlManager.add_urls(urls)
+                self.saver.save(datas)
+            except Exception as e:
+                print(e)
+

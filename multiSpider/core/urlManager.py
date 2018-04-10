@@ -1,24 +1,32 @@
 from urllib.parse import urljoin
+from redis import Redis
+
 
 class UrlManager:
-    def __init__(self, rootUrl, urls, max_depth):
-        self.max_depth = max_depth
-        self.newUrls = dict(urls)
-        self.oldUrls = list()
+    def __init__(self, rootUrl, urls):
+        self.redis = Redis(decode_responses=True)
         self.rootUrl = rootUrl
+        self.newUrls = 'newUrls'
+        self.oldUrls = 'oldUrls'
+        self.add_urls(urls)
 
     def has_url(self):
-        return len(self.newUrls) != 0
+        num = self.redis.scard(self.newUrls)
+        return num if num else 'end'
 
     def get_url(self):
-        url, depth = self.newUrls.popitem()
-        self.oldUrls.append(url)
-        return urljoin(self.rootUrl, url), depth
+        url = self.redis.spop(self.newUrls)
+        self.redis.sadd(self.oldUrls, url)
+        return urljoin(self.rootUrl, url)
 
-    def add_url(self, url, depth):
-        if depth <= self.max_depth and url not in self.newUrls.keys() and url not in self.oldUrls:
-            self.newUrls[url] = depth
+    def add_url(self, url):
+        if self.redis.sismember(self.newUrls, url) or self.redis.sismember(self.oldUrls, url):
+            return 0
+        self.redis.sadd(self.newUrls, url)
+        return 1
 
-    def add_urls(self, urls, depth=0):
+    def add_urls(self, urls):
+        count = 0
         for url in urls:
-            self.add_url(url, depth)
+            count += self.add_url(url)
+        return count
