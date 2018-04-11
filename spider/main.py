@@ -1,8 +1,8 @@
 import re
 
-from saver import Saver
-from spider.parser import SVzParser
-from spider.svz import SVzSpider
+from spider.saver import Saver
+from spider.core.parser import SVzParser
+from spider.core.svz import SVzSpider
 from bs4 import BeautifulSoup
 import matplotlib
 
