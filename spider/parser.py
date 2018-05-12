@@ -1,3 +1,3 @@
 class SVzParser:
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         pass

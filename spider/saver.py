@@ -1,3 +1,3 @@
 class SVzSaver:
-    def save(self, datas):
+    def save(self, datas,**kwargs):
         print(datas)

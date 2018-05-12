@@ -5,7 +5,7 @@ from spider.svz import SVzSpider
 from bs4 import BeautifulSoup
 
 class Paser(SVzParser):
-    def parse(self, content):
+    def parse(self, content, **kwargs):
         urls=[]
         datas=[]
         bs = BeautifulSoup(content,'html.parser')
