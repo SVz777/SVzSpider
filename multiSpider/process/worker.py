@@ -16,22 +16,13 @@ class Worker(Process):
         self.downloader = downloader()
         self.parser = parser()
 
-    def initManager(self):
+    def init_manager(self):
         for action in managerAction:
-            print(action)
-            self.manager.register(action['typeid'])
+            self.manager.register(action.typeid)
         self.manager.connect()
 
-    # def initQueue(self):
-    #     self.newUrls = self.manager.getUrl()
-    #     self.oldUrls = self.manager.getOldUrls()
-
     def run(self):
-        self.initManager()
-        # self.initQueue()
+        self.init_manager()
         while True:
-            u = self.manager.getUrl()
+            u = self.manager.get_task()
             print(u)
-            u['c']=1
-            print(u['a'])
-            sleep(1)

@@ -1,25 +1,3 @@
-from multiprocessing.managers import ListProxy, DictProxy, ValueProxy
-
-managerConfig = {
-    'address': ('', 8001),
-    'authkey': 'asd'.encode()
-}
-
-managerAction=[
-    # {
-    #     'typeid':'getNewUrls',
-    #     'proxytype':DictProxy
-    # },
-    # {
-    #     'typeid':'getOldUrls',
-    #     'proxytype':ListProxy
-    # }
-    {
-        'typeid':'getUrl',
-        'proxytype':ValueProxy,
-    }
-]
-
 agents = [
     "Mozilla/5.0 (Linux; U; Android 2.3.6; en-us; Nexus S Build/GRK39F) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
     "Avant Browser/1.2.789rel1 (http://www.avantbrowser.com)",
@@ -83,4 +61,22 @@ agents = [
     "Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/525.10  (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2",
     "Mozilla/5.0 (Linux; U; Android 1.6; es-es; SonyEricssonX10i Build/R1FA016) AppleWebKit/528.5  (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1",
     "Mozilla/5.0 (Linux; U; Android 1.6; en-us; SonyEricssonX10i Build/R1AA056) AppleWebKit/528.5  (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1",
+]
+
+managerConfig = {
+    'address': ('', 8001),
+    'authkey': 'asd'.encode()
+}
+
+
+class Action:
+    def __init__(self, typeid, action):
+        self.typeid = typeid,
+        self.action = action
+
+
+managerAction = [
+    Action('pop_task', 'pop_task'),
+    Action('push_task', 'push_task'),
+    Action('has_task', 'has_task'),
 ]
