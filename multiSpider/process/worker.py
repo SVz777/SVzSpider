@@ -1,28 +1,22 @@
-from multiprocessing.managers import BaseManager
+import random
+from multiprocessing.managers import BaseManager,AutoProxy
 
 from multiprocessing import Process
 from time import sleep
 
 from multiSpider.core.config import *
-from multiSpider.core.downloader import Downloader
-from multiSpider.core.parser import Parser
+from multiSpider.core.model import Task
+from multiSpider.core.processor import Downloader, Parser
 
 
 class Worker(Process):
-    def __init__(self, name, *, downloader=Downloader, parser=Parser):
+    def __init__(self, name):
         super().__init__()
         self.name=name
         self.manager=BaseManager(**managerConfig)
-        self.downloader = downloader()
-        self.parser = parser()
+        self.init_manager()
 
     def init_manager(self):
         for action in managerAction:
-            self.manager.register(action.typeid)
+            self.manager.register(action.typeid,proxytype=action.proxy)
         self.manager.connect()
-
-    def run(self):
-        self.init_manager()
-        while True:
-            u = self.manager.get_task()
-            print(u)

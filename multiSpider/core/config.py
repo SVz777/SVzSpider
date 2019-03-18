@@ -1,3 +1,5 @@
+from multiprocessing.managers import ValueProxy
+
 agents = [
     "Mozilla/5.0 (Linux; U; Android 2.3.6; en-us; Nexus S Build/GRK39F) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
     "Avant Browser/1.2.789rel1 (http://www.avantbrowser.com)",
@@ -70,13 +72,15 @@ managerConfig = {
 
 
 class Action:
-    def __init__(self, typeid, action):
-        self.typeid = typeid,
+    def __init__(self, typeid, action, proxy=None):
+        self.typeid = typeid
         self.action = action
+        self.proxy = proxy
 
 
 managerAction = [
-    Action('pop_task', 'pop_task'),
-    Action('push_task', 'push_task'),
-    Action('has_task', 'has_task'),
+    Action('pop_task', 'pop_task',ValueProxy),
+    Action('push_task', 'push_task',ValueProxy),
+    Action('push_tasks', 'push_tasks',ValueProxy),
+    Action('has_task', 'has_task',ValueProxy),
 ]
