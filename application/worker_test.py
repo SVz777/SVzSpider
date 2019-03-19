@@ -15,10 +15,10 @@ class Customer(Worker):
         while True:
             u = self.manager.pop_task()._getvalue()
             if not u:
-                print('no task')
+                print(f'{self.name} no task')
                 sleep(1)
                 continue
-
+            print(f'{self.name} do:{u}')
             newtasks = u.do()
             if newtasks:
                 self.manager.push_tasks(newtasks)
@@ -28,7 +28,7 @@ p = Producer('p')
 p.start()
 #
 c=[]
-for i in range(3):
+for i in range(10):
     customer = Customer(f'c{i}')
     c.append(customer)
     customer.start()

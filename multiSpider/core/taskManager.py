@@ -1,22 +1,25 @@
 from multiSpider.core.model import Task
 from multiSpider.core.processor import Downloader, Parser
+from multiSpider.core.log import logger
+import functools
 
 
 def p(func):
-    a = func.__name__
-
-    def wapper(*args,**kwargs):
-        # print(a)
-        res = func(*args,**kwargs)
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger.debug(func.__name__)
+        res = func(*args, **kwargs)
         return res
 
-    return wapper
+    return wrapper
+
 
 class TaskManager:
     def __init__(self, tasks):
         self.newTask = set()
         self.oldTask = set()
         self.push_tasks(tasks)
+
     @p
     def has_task(self):
         return len(self.newTask) != 0
