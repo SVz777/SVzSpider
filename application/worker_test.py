@@ -7,21 +7,31 @@ from multiSpider.process.worker import Worker
 
 class Producer(Worker):
     def run(self):
-        self.manager.push_task(Task(SVzDownloader(), f'http://www.svz7.cn'))
+        self.manager.push_task(Task(SVzDownloader(), f'http://127.0.0.1:8888/1'))
 
 
 class Customer(Worker):
     def run(self):
         while True:
-            if not self.manager.has_task()._getvalue():
+            u = self.manager.pop_task()._getvalue()
+            if not u:
                 print('no task')
-                sleep(5)
+                sleep(1)
                 continue
-            u: Task = self.manager.pop_task()._getvalue()
+
             newtasks = u.do()
             if newtasks:
                 self.manager.push_tasks(newtasks)
 
 
-c = Customer('c')
-c.start()
+p = Producer('p')
+p.start()
+#
+c=[]
+for i in range(3):
+    customer = Customer(f'c{i}')
+    c.append(customer)
+    customer.start()
+
+for i in c:
+    i.join()

@@ -5,6 +5,9 @@ class Processor:
     def do(self, obj):
         raise NotImplementedError
 
+    def __eq__(self, other):
+        return self.__class__ == other.__class__
+
 
 class Downloader(Processor):
     def download(self, url):

@@ -6,7 +6,7 @@ def p(func):
     a = func.__name__
 
     def wapper(*args,**kwargs):
-        print(a)
+        # print(a)
         res = func(*args,**kwargs)
         return res
 
@@ -23,14 +23,15 @@ class TaskManager:
 
     @p
     def pop_task(self):
-        task = self.newTask.pop()
-        self.oldTask.add(task)
-        return task
+        if self.has_task():
+            task = self.newTask.pop()
+            self.oldTask.add(task)
+            return task
+        return None
 
     @p
     def push_task(self, task):
-        if task not in self.oldTask or task not in self.newTask:
-            print(task)
+        if task not in self.oldTask and task not in self.newTask:
             self.newTask.add(task)
 
     @p
@@ -41,8 +42,13 @@ class TaskManager:
 
 if __name__ == '__main__':
     tm = TaskManager([])
-    tm.push_tasks([Task(Downloader, 'http://www.baidu.com'), Task(Parser, 'test')])
-    tm.push_tasks([Task(Downloader, 'http://www.baidu.com'), Task(Parser, 'test')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
+    tm.push_tasks([Task(Downloader(), 'http://127.0.0.1:8888/1')])
     while tm.has_task():
         a = tm.pop_task()
         print(a)

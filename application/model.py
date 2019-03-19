@@ -34,19 +34,16 @@ item = namedtuple('item', ['title', 'name', 'content'])
 class SVzParser(Parser):
     def parse(self, content):
         bs = BeautifulSoup(content, 'html.parser')
-        urls = [f"https://www.svz7.cn{i['href']}" for i in bs.select('a[href^=/]')]
-        cont = bs.select_one('div#content')
-        data = {}
+        urls = [f"http://127.0.0.1:8888{i['href']}" for i in bs.select('a[href^=/]')]
+        cont = bs.select_one('p')
+        datas = []
 
         if cont:
-            finded = bs.select_one('h2.post-title')
-            title=''
-            if finded:
-                title = finded.text
-            data = item(title=title, name='', content='')
+            title = cont.text
+            datas.append(item(title=title, name=title, content=title))
 
         tasks = [
-            Task(SVzSaver(), data)
+            Task(SVzSaver(), tuple(datas))
         ]
 
         for url in urls:
@@ -56,5 +53,6 @@ class SVzParser(Parser):
 
 
 class SVzSaver(Saver):
-    def save(self, data):
-        print(data)
+    def save(self, datas):
+        for data in datas:
+            print(data)
