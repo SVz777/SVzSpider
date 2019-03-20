@@ -35,6 +35,7 @@ class SVzParser(Parser):
     def parse(self, content):
         bs = BeautifulSoup(content, 'html.parser')
         urls = [f"http://127.0.0.1:8888{i['href']}" for i in bs.select('a[href^=/]')]
+        print('urls:',urls)
         cont = bs.select_one('p')
         datas = []
 
