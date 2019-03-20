@@ -2,3 +2,5 @@
 *.iml
 *.csv
 __pycache__/
+
+test/
