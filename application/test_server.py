@@ -2,7 +2,8 @@ import flask
 
 app = flask.Flask('app')
 
-app.route('/<int:a>')
+
+@app.route('/<int:a>')
 def test(a):
     return f'''
     <a href='{a - 1}'>prev</a>
